@@ -43,3 +43,20 @@ jobs:
        key: ${{runner.os}}-build
     - name: Build with Maven
       run: mvn test
+      
+  package:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    needs:
+    - test
+    - build
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+       path: $maven_package_cache
+       key: ${{runner.os}}-build
+    - name: Build with Maven
+      run: mvn package
